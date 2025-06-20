@@ -1,4 +1,4 @@
-package com.redispubsub.redispubsub.service;
+package com.redispubsub.redispubsub.listener;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;

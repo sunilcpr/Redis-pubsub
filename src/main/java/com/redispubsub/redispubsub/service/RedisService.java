@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Slf4j
 @Service
-public class MessagePublisher {
+public class RedisService {
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -21,7 +21,12 @@ public class MessagePublisher {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
-    public void publish(String channel, TickerPriceDataRequestModel tickerPriceDataRequestModel) {
+    /**
+     * Store data in redis
+     *
+     * @param tickerPriceDataRequestModel {@link TickerPriceDataRequestModel}
+     */
+    public void store(TickerPriceDataRequestModel tickerPriceDataRequestModel) {
         try {
             Map<String, TickerPriceDataRequestModel> wrapper = new HashMap<>();
             wrapper.put(tickerPriceDataRequestModel.getSymbol(), tickerPriceDataRequestModel);
@@ -29,8 +34,6 @@ public class MessagePublisher {
             String json = objectMapper.writeValueAsString(wrapper);
             // store data in redis
             redisTemplate.opsForValue().set(tickerPriceDataRequestModel.getSymbol(), json);
-            // Publish to Redis channels
-            //redisTemplate.convertAndSend(channel, json);
         } catch (JsonProcessingException e) {
             log.error("Error while publishing tickerPriceDataRequestModel: {}", e.getMessage());
         }

@@ -2,7 +2,7 @@
 package com.redispubsub.redispubsub.controller;
 
 import com.redispubsub.redispubsub.model.TickerPriceDataRequestModel;
-import com.redispubsub.redispubsub.service.MessagePublisher;
+import com.redispubsub.redispubsub.service.RedisService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,17 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-public class MessageController {
+public class DateStoreController {
 
     @Autowired
-    private MessagePublisher messagePublisher;
+    private RedisService redisService;
 
-/*    @Autowired
-    private ChannelTopic channelTopic;*/
-
-    @PostMapping("/publish")
+    @PostMapping("/store")
     public String publishMessage(@Valid @RequestBody TickerPriceDataRequestModel tickerPriceDataRequestModel) {
-        messagePublisher.publish("channelTopic", tickerPriceDataRequestModel);
+        redisService.store(tickerPriceDataRequestModel);
         return "Message published!";
     }
 }
